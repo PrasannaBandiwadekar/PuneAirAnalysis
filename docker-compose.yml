@@ -1,0 +1,43 @@
+# One command to run everything locally:  docker compose up --build
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: puneair
+      POSTGRES_PASSWORD: puneair
+      POSTGRES_DB: puneair
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U puneair"]
+      interval: 5s
+      retries: 10
+
+  pipeline:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://puneair:puneair@db:5432/puneair
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+
+  dashboard:
+    build: .
+    command: streamlit run app/streamlit_app.py --server.address=0.0.0.0 --server.port=8501
+    environment:
+      DATABASE_URL: postgresql://puneair:puneair@db:5432/puneair
+    ports:
+      - "8501:8501"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./models:/app/models
+
+volumes:
+  pgdata:

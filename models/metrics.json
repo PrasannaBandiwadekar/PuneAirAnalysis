@@ -1,0 +1,18 @@
+{
+  "train_rows": 4545,
+  "test_rows": 840,
+  "test_period": "2026-10-18 to 2026-10-25",
+  "mae_model": 12.73,
+  "mae_baseline": 13.61,
+  "rmse_model": 15.3,
+  "rmse_baseline": 17.98,
+  "improvement_over_baseline_pct": 6.5,
+  "top_features": {
+    "pm2_5": 0.655,
+    "pm25_roll_24h": 0.055,
+    "day_of_week": 0.048,
+    "temperature_2m": 0.045,
+    "nitrogen_dioxide": 0.044,
+    "pm25_lag_24h": 0.03
+  }
+}
